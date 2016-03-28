@@ -218,8 +218,10 @@ class Attachment:
         self.name = attachment.get_filename()
         # Raw file data
         self.payload = attachment.get_payload(decode=True)
+        # Filesize in kilobytes (for compatibility)
+        self.size = int(round(len(self.payload) / 1000.0)) if self.payload else 0
         # Filesize in kilobytes
-        self.size = int(round(len(self.payload)/1000.0))
+        self.size_bytes = len(self.payload) if self.payload else 0
 
     def save(self, path=None):
         if path is None:
