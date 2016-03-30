@@ -1,6 +1,7 @@
 import datetime
 import email
 import re
+import six
 import time
 import os
 from email.header import decode_header, make_header
@@ -133,10 +134,15 @@ class Message():
         return ''.join(t[0] for t in dh)
 
     def parse(self, raw_message):
-        raw_headers = raw_message[0].decode()
+        raw_headers = raw_message[0]
         raw_email = raw_message[1]
 
-        self.message = email.message_from_string(raw_email.decode())
+        if isinstance(raw_headers, six.binary_type):
+            raw_headers = raw_headers.decode()
+        if isinstance(raw_email, six.binary_type):
+            raw_email = raw_email.decode()
+
+        self.message = email.message_from_string(raw_email)
         self.headers = self.parse_headers(self.message)
 
         self.to = self.message['to']
