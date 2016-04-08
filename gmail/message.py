@@ -6,6 +6,8 @@ import time
 import os
 from email.header import decode_header, make_header
 from imaplib import ParseFlags
+from pprint import pprint
+
 
 class Message():
 
@@ -130,8 +132,10 @@ class Message():
             return list()
 
     def parse_subject(self, encoded_subject):
-        dh = decode_header(encoded_subject)
-        return ''.join(t[0].decode('utf-8') if isinstance(t[0], six.binary_type) else t[0] for t in dh)
+        if encoded_subject is not None:
+            dh = decode_header(encoded_subject)
+            return ''.join(t[0].decode('utf-8') if isinstance(t[0], six.binary_type) else t[0] for t in dh)
+        return None
 
     def parse(self, raw_message):
         raw_headers = raw_message[0]
